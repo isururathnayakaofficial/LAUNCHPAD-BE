@@ -3,7 +3,7 @@ import { createCustomer, getCustomers } from "../controllers/customer.controller
 
 const router = Router();
 
-router.get("/", getCustomers);
-router.post("/", createCustomer);
+router.get("/getAll", getCustomers);
+router.post("/save", createCustomer);
 
 export default router;
