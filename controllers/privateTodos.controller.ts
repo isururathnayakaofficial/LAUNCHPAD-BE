@@ -22,5 +22,4 @@ export const createPrivateTodo = async (req: Request, res: Response, next: NextF
   } catch (error) {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
-  next();
 };
