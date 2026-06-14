@@ -1,5 +1,4 @@
-
-import { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IPrivateTodoDocument extends Document {
   title: string;
@@ -31,4 +30,4 @@ const privateTodoSchema = new Schema({
   timestamps: true
 });
 
-export default mangoose.mongoose.model<IPrivateTodoDocument>("privateTodos",privateTodoSchema)
+export default mongoose.model<IPrivateTodoDocument>("privateTodos", privateTodoSchema);

@@ -1,9 +1,9 @@
 import { Router } from "express";
-import{ createPrivateTodo, getPrivateTodos } from "../controllers/privateTodo.controller";
+import{ createPrivateTodo } from "../controllers/privateTodos.controller";
 
 const router = Router();
 
-router.get("/getAll", getPrivateTodos);
+//router.get("/getAll", getPrivateTodos);
 router.post("/save", createPrivateTodo);
 
 export default router;
