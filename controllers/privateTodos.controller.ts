@@ -4,6 +4,8 @@ import { ObjectId } from "mongodb";
 
 
 interface PrivateTodoRequest extends Request {
+  //json inside have string this type coversion user to decode it
+  
   userId?: string;
 }
 
@@ -164,4 +166,32 @@ export const updatePrivateTodo = async (
       message: "Internal server error"
     });
   }
+};
+
+export const deleteTodo = async (req: PrivateTodoRequest, res: Response): Promise<void> => {
+    try {
+        const todoId = req.params.id as string;
+        const userId = req.userId;
+
+        if (!ObjectId.isValid(todoId)) {
+            res.status(400).json({ message: "Invalid Todo ID" });
+            return;
+        }
+
+        const result = await privateTodosCollection().deleteOne({
+            _id: new ObjectId(todoId),
+            userId:new ObjectId(userId) //  ensures only owner can delete
+        });
+
+        if (result.deletedCount === 0) {
+            res.status(404).json({ message: "Todo not found or unauthorized" });
+            return;
+        }
+
+        res.status(200).json({ message: "Todo deleted successfully" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 };
