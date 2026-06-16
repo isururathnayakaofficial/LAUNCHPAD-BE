@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 
 interface PrivateTodoRequest extends Request {
   //json inside have string this type coversion user to decode it
-  
+
   userId?: string;
 }
 
@@ -195,3 +195,33 @@ export const deleteTodo = async (req: PrivateTodoRequest, res: Response): Promis
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+export const getPrivateTodos = async (
+    req: PrivateTodoRequest,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+ 
+ const userId = new ObjectId(req.userId); // Convert userId to ObjectId
+    try {
+        if (!userId) {
+            res.status(401).json({
+                success: false,
+                message: "Unauthorized"
+            });
+            return;
+        }
+         
+        const todos = await privateTodosCollection().find({userId: new ObjectId(userId)}).toArray();
+        res.status(200).json({
+            success: true,
+            message: "Todos retrieved successfully",
+            data: todos
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }   
+}
