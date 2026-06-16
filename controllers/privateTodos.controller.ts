@@ -18,7 +18,7 @@ export const createPrivateTodo = async (
 
   try {
 
-    const { title, description } = req.body;
+    const { title, description,status } = req.body;
 
     const userId = req.userId;
 
@@ -47,6 +47,8 @@ export const createPrivateTodo = async (
 
       description,
 
+      status: status || "pending",
+
       userId: new ObjectId(userId),
 
       createdAt: new Date(),
@@ -65,7 +67,8 @@ export const createPrivateTodo = async (
       data: {
         id: result.insertedId,
         title,
-        description
+        description,
+        status: "pending"
       }
 
     });
