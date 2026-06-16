@@ -8,7 +8,7 @@ interface PrivateTodoRequest extends Request {
     todos?: any[];
 }
 
-const todosCollection = () => getDB().collection('todos');
+const todosCollection = () => getDB().collection('privateTodos');
 
 
 export const checkTodoOwnership = async (
