@@ -65,9 +65,51 @@ const tasksToken = uuidv4();
         }
     }); 
 
-    
-
-    
-
   }
 
+  export const getSpecificTasks = async (
+  req: taksAssign,
+  res: Response
+) => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
+
+    //  Get user from DB (IMPORTANT)
+    const user = await getDB()
+      .collection("users")
+      .findOne({ _id: new ObjectId(userId) });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    //  Use email to fetch tasks
+    const specificTasks = await tasks()
+      .find({ email: user.email })
+      .toArray();
+
+    return res.status(200).json({
+      success: true,
+      message: "Tasks fetched successfully",
+      data: specificTasks
+    });
+
+  } catch (error) {
+    console.error("Error fetching specific tasks:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};

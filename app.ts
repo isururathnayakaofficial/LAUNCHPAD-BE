@@ -16,8 +16,7 @@ app.use("/api/customers", customerRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/private-todos", privateTodosRoutes);
 app.use("/api/tasks", tasksRouter);
-console.log("EMAIL_USER:", process.env.EMAIL_USER);
-console.log("EMAIL_PASSWORD:", process.env.EMAIL_PASSWORD);
+
 
 
 export default app;
