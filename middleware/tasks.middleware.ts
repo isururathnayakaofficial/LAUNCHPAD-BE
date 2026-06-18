@@ -42,7 +42,7 @@ export const checkTaskOwnership = async (
             });
             return;
         }
-        req.task = task;
+        //req.task = task;
         next();
     } catch (error) {
         res.status(500).json({
