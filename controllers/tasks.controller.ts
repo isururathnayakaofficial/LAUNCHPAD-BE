@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import {getDB} from '../config/db';
 import {ObjectId} from 'mongodb';
 import {v4 as uuidv4} from 'uuid';
+import { sendTaskEmail } from '../services/mail.service';
 
 
 interface taksAssign extends Request {
@@ -45,6 +46,7 @@ const tasksToken = uuidv4();
         createdAt: new Date()
     });
     const joinLink = `${process.env.FRONTEND_URL}/tasks/${tasksToken}`;
+    await sendTaskEmail (email, title, joinLink);
 
     res.status(201).json({
         success:true,
@@ -62,6 +64,8 @@ const tasksToken = uuidv4();
             createdAt: new Date()
         }
     }); 
+
+    
 
     
 
