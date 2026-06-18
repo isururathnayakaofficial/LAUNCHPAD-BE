@@ -10,7 +10,7 @@ interface taksAssign extends Request {
 }
 
 const tasks = () => getDB().collection("tasks");
-
+const tasksToken = uuidv4();
 
 
   export const createTask = async (req:taksAssign,res:Response) => {
@@ -33,7 +33,37 @@ const tasks = () => getDB().collection("tasks");
         });
         return;
     }
-    const inviteToken = new ObjectId().toString();
+
+    const result = await tasks().insertOne({
+        title,
+        email,
+        role,
+        description,
+        mediaUrl: mediaUrl || null,
+        token: tasksToken,
+        status: "pending",
+        createdAt: new Date()
+    });
+    const joinLink = `${process.env.FRONTEND_URL}/tasks/${tasksToken}`;
+
+    res.status(201).json({
+        success:true,
+        message:"Task created successfully",
+        data: {
+            id: result.insertedId,
+            title,
+            email,
+            role,
+            description,
+            mediaUrl: mediaUrl || null,
+            token: tasksToken,
+            status: "pending", 
+            joinLink,         
+            createdAt: new Date()
+        }
+    }); 
+
+    
 
   }
 

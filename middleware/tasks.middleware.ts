@@ -33,7 +33,7 @@ export const checkTaskOwnership = async (
             });
             return;
         }
-        const task = await tasksCollection().findOne({ _id: new ObjectId(taskId), userId: new ObjectId(userId) });
+        const task = await tasksCollection().findOne({ _id: new ObjectId(taskId) });
 
         if (!task) {
             res.status(404).json({
