@@ -113,3 +113,34 @@ const tasksToken = uuidv4();
     });
   }
 };
+
+export const deleteTask = async (req: Request, res: Response) => {
+  try {
+    const taskId = req.params.id as string;
+    //const userId = req.userId;
+
+    const result = await tasks().deleteOne({
+      _id: new ObjectId(taskId),
+     // email: userId //  ensures only owner can delete
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found or unauthorized"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Task deleted successfully"
+    });
+  } catch (error) {
+    console.error("Error deleting task:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
