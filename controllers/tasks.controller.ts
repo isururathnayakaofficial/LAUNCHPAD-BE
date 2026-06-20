@@ -144,3 +144,45 @@ export const deleteTask = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const updateTask = async (req: Request, res: Response) => {
+  try {
+    const taskId = req.params.id as string;
+
+    const { title, description, role, status } = req.body;
+
+    const updateData: any = {};
+
+    if (title) updateData.title = title;
+    if (description) updateData.description = description;
+    if (role) updateData.role = role;
+    if (status) updateData.status = status;
+
+    const result = await tasks().updateOne(
+      { _id: new ObjectId(taskId) },
+      {
+        $set: updateData
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Task updated successfully"
+    });
+
+  } catch (error) {
+    console.error("Error updating task:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
