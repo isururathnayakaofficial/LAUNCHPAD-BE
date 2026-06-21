@@ -5,6 +5,8 @@ export interface ITaskDocument extends Document {
 
     title:string;
 
+    name:string;
+
     email:string;
 
     role:string;
@@ -40,6 +42,11 @@ email:{
     type:String,
     required:true,
     lowercase:true
+},
+
+name:{
+    type:String,
+    required:true
 },
 
 

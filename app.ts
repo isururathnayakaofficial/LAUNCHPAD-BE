@@ -11,8 +11,16 @@ import customerRoutes from "./routes/customer.routes";
 import privateTodosRoutes from "./routes/privateTodos.routers";
 import tasksRouter from "./routes/task.routers";
 import authRoutes from "./routes/auth.routes";
+import cors from "cors";
 
 const app: Application = express();
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+app.options(/.*/, cors());
 
 app.use(express.json());
 

@@ -19,17 +19,17 @@ const tasks = () => getDB().collection("tasks");
 
 export const createTask = async (req: any, res: Response) => {
   try {
-    const { title, email, role, description } = req.body;
+    const { title, email, role, description, name } = req.body;
     const userId = req.userId;
 
     if (!userId) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    if (!title || !email || !role || !description) {
+    if (!title || !email || !role || !description || !name) {
       return res.status(400).json({
         success: false,
-        message: "Title, email, role and description are required"
+        message: "Title, email, role, description and name are required"
       });
     }
 
@@ -44,6 +44,7 @@ const mediaUrls =
 
     const result = await getDB().collection("tasks").insertOne({
       title,
+      name,
       email,
       role,
       description,
@@ -68,6 +69,7 @@ const mediaUrls =
       data: {
         id: result.insertedId,
         title,
+        name,
         email,
         role,
         description,
