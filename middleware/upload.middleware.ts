@@ -9,6 +9,7 @@ const storage = new CloudinaryStorage({
 
     params: async () => ({
         folder: "tasks",
+        resource_type: "auto",
         allowed_formats: [
             "jpg",
             "png",

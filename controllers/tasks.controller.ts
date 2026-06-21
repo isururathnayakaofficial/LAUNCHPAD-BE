@@ -1,9 +1,10 @@
 import {Request, Response} from 'express';
 import {getDB} from '../config/db';
-import {ObjectId} from 'mongodb';
+import {MongoInvalidArgumentError, ObjectId} from 'mongodb';
 import {v4 as uuidv4} from 'uuid';
 import { sendTaskEmail } from '../services/mail.service';
 import {Multer} from 'multer';
+import Crypto from 'crypto';
 
 
 interface taksAssign extends Request {
@@ -13,61 +14,84 @@ interface taksAssign extends Request {
 }
 
 const tasks = () => getDB().collection("tasks");
-const tasksToken = uuidv4();
 
 
-  export const createTask = async (req:taksAssign,res:Response) => {
-    const mediaUrl = req.file ? `${process.env.BACKEND_URL}/uploads/${req.file.filename}` : null;
-    const {title,email,role,description} = req.body;
+
+export const createTask = async (req: any, res: Response) => {
+  try {
+    const { title, email, role, description } = req.body;
     const userId = req.userId;
-    
 
-    if(!userId){
-        res.status(401).json({
-            success:false,
-            message:"Unauthorized"
-        });
-        return;
-    }
-    if(!title || !email || !role || !description){
-        res.status(400).json({
-            success:false,
-            message:"Title, email, role and description are required"
-        });
-        return;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    const result = await tasks().insertOne({
+    if (!title || !email || !role || !description) {
+      return res.status(400).json({
+        success: false,
+        message: "Title, email, role and description are required"
+      });
+    }
+
+
+    // 🔥 CLOUDINARY SAFE EXTRACTION
+   const multipleFiles = req.files as any[] | undefined;
+
+const mediaUrls =
+  multipleFiles?.map(file => file.path || file.secure_url) || [];
+
+    const tasksToken = crypto.randomUUID();
+
+    const result = await getDB().collection("tasks").insertOne({
+      title,
+      email,
+      role,
+      description,
+      mediaUrl: mediaUrls,
+      inviteToken: tasksToken,
+      status: "pending",
+      createdAt: new Date(),
+      userId
+    });
+
+    const joinLink = `${process.env.FRONTEND_URL}/tasks/${tasksToken}`;
+
+    try {
+      await sendTaskEmail(email, title, joinLink);
+    } catch (emailError) {
+      console.error("EMAIL ERROR:", emailError);
+    }
+
+    return res.status(201).json({
+      success: true,
+      message: "Task created successfully",
+      data: {
+        id: result.insertedId,
         title,
         email,
         role,
         description,
-        mediaUrl: mediaUrl || null,
-        token: tasksToken,
+        mediaUrl: mediaUrls,
+        inviteToken: tasksToken,
         status: "pending",
+        joinLink,
         createdAt: new Date()
+      }
     });
-    const joinLink = `${process.env.FRONTEND_URL}/tasks/${tasksToken}`;
-    await sendTaskEmail (email, title, joinLink);
 
-    res.status(201).json({
-        success:true,
-        message:"Task created successfully",
-        data: {
-            id: result.insertedId,
-            title,
-            email,
-            role,
-            description,
-            mediaUrl: mediaUrl || null,
-            token: tasksToken,
-            status: "pending", 
-            joinLink,         
-            createdAt: new Date()
-        }
-    }); 
-
-  }
+  } catch (error: any) {
+  
+  
+  console.error(" STRINGIFIED ERROR:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+  console.log("REQ BODY:", req.body);
+console.log("REQ FILES:", req.files);
+  return res.status(500).json({
+    success: false,
+    message: error?.message || "Unknown error",
+    fullError: JSON.stringify(error, Object.getOwnPropertyNames(error), 2)
+  });
+}
+};
 
   export const getSpecificTasks = async (
   req: taksAssign,

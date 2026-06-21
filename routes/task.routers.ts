@@ -6,7 +6,7 @@ import {createTask, getSpecificTasks,deleteTask,updateTask} from "../controllers
 import { upload } from "../middleware/upload.middleware";
 
 const router = Router();
-router.post("/create", authMiddleware,upload.single("file"), createTask); // task creator route
+router.post("/create", authMiddleware, upload.array("files", 10), createTask); // task creator route
 router.put("/update/:id", authMiddleware,checkTaskOwnership, updateTask);
 router.delete("/delete/:id", authMiddleware,checkTaskOwnership, deleteTask);
 router.get("/get/:userId", authMiddleware, getSpecificTasks);
