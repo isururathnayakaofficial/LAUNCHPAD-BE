@@ -7,15 +7,15 @@ const storage = new CloudinaryStorage({
 
     cloudinary: cloudinary,
 
-    params:{
-        folder:"tasks",
-        allowed_formats:[
+    params: async () => ({
+        folder: "tasks",
+        allowed_formats: [
             "jpg",
             "png",
             "pdf",
             "mp4"
         ]
-    }
+    })
 
 });
 

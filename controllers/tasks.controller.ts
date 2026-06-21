@@ -3,11 +3,13 @@ import {getDB} from '../config/db';
 import {ObjectId} from 'mongodb';
 import {v4 as uuidv4} from 'uuid';
 import { sendTaskEmail } from '../services/mail.service';
+import {Multer} from 'multer';
 
 
 interface taksAssign extends Request {
 
     userId?: string;
+    file?:Express.Multer.File;
 }
 
 const tasks = () => getDB().collection("tasks");
@@ -15,8 +17,8 @@ const tasksToken = uuidv4();
 
 
   export const createTask = async (req:taksAssign,res:Response) => {
-
-    const {title,email,role,description,mediaUrl} = req.body;
+    const mediaUrl = req.file ? `${process.env.BACKEND_URL}/uploads/${req.file.filename}` : null;
+    const {title,email,role,description} = req.body;
     const userId = req.userId;
     
 
