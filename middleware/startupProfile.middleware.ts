@@ -17,9 +17,9 @@ export const checkProfileOwnership = async (
 ) => {
     try {
         const userId = req.userId;
-        const profileId = req.params.id;
+       // const profileId = req.params.id;
 
-        if (!userId || !profileId) {
+        if (!userId ) {
             return res.status(400).json({
                 success: false,
                 message: "User ID and Profile ID are required"
@@ -27,7 +27,7 @@ export const checkProfileOwnership = async (
         }
 
         const profile = await startupProfileCollection().findOne({
-            _id: new ObjectId(profileId),
+            
             userId: new ObjectId(userId)
         });
 
