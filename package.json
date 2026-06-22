@@ -20,7 +20,7 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.1.0",
-    "@types/node": "^25.9.2",
+    "@types/node": "^25.9.4",
     "@types/nodemailer": "^8.0.1",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
@@ -28,7 +28,7 @@
   },
   "scripts": {
     "dev": "nodemon --exec ts-node server.ts",
-    "build": "tsc",
+    "build": "npx tsc",
     "start": "node dist/server.js"
   }
 }
