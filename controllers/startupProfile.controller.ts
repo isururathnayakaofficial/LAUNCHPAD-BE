@@ -13,7 +13,7 @@ export const CreateProfile = async (
     next:NextFunction
 ):Promise<void> => {
     try{
-      const {companyName,currentStage,industry,teamSize,} = req.body;
+      const {companyName,tagLine,currentStage,industry,teamSize,} = req.body;
       const userId =req.userId;
 
       if (!companyName || !currentStage || !industry || !teamSize){
@@ -25,6 +25,7 @@ export const CreateProfile = async (
       }
       const result = await startupProfileCollection().insertOne({
         companyName,
+        tagLine,
         currentStage,
         industry,
         teamSize,
@@ -38,6 +39,7 @@ export const CreateProfile = async (
         data:{
             id:result.insertedId,
             companyName,
+            tagLine,
             currentStage,
             industry,
             teamSize,

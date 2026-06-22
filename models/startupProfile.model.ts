@@ -5,6 +5,10 @@ const startupProfileSchema = new Schema({
         type: String,
         required: true
     },
+    tagLine: {
+        type: String,
+        required: false
+    },
     currentStage: {
         type: String,
         required: true
