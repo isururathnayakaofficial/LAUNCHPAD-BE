@@ -22,7 +22,7 @@ const app: Application = express();
 //   allowedHeaders: ["Content-Type", "Authorization"],
 //   credentials: true
 // }));
-app.options(/.*/, cors());
+//app.options(/.*/, cors());
 
 app.use(express.json());
 
