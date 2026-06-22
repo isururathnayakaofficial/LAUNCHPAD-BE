@@ -22,7 +22,14 @@ export const checkProfileOwnership = async (
         if (!userId ) {
             return res.status(400).json({
                 success: false,
-                message: "User ID and Profile ID are required"
+                message: "User ID is required"
+            });
+        }
+
+        if (!ObjectId.isValid(userId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid user ID"
             });
         }
 
@@ -40,6 +47,48 @@ export const checkProfileOwnership = async (
 
         req.profile = profile;
         next();
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+};
+
+export const checkAlreadyHaveProfile = async (
+    req: StartupProfileRequest,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const userId = req.userId;
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "User ID is required"
+            });
+        }
+
+        if (!ObjectId.isValid(userId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid user ID"
+            });
+        }
+
+        const checkAlreadyHaveProfile = await startupProfileCollection().countDocuments({
+
+            userId: new ObjectId(userId)
+        });
+        if (checkAlreadyHaveProfile >= 1) {
+            return res.status(400).json({
+                success: false,
+                message: "You already have a profile.You can not make a new ACompany Profile uisng this email"
+            });
+        } else {
+            next();
+        }
     } catch (error) {
         res.status(500).json({
             success: false,
