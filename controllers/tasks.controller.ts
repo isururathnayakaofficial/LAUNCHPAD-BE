@@ -55,7 +55,8 @@ const mediaUrls =
       userId
     });
 
-    const joinLink = `${process.env.FRONTEND_URL}/tasks/${tasksToken}`;
+    const savedTaskId = result.insertedId;
+    const joinLink = `${process.env.FRONTEND_URL}/tasks/${savedTaskId}`;
 
     try {
       await sendTaskEmail(email, title, joinLink);
