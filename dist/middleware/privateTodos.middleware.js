@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.filterPrivateTodos = exports.checkTodoOwnership = void 0;
 const db_1 = require("../config/db");
 const mongodb_1 = require("mongodb");
-const todosCollection = () => (0, db_1.getDB)().collection('todos');
+const todosCollection = () => (0, db_1.getDB)().collection('privateTodos');
 const checkTodoOwnership = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const todoId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;

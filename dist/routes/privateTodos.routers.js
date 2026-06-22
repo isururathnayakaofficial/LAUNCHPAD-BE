@@ -2,7 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const privateTodos_controller_1 = require("../controllers/privateTodos.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const privateTodos_middleware_1 = require("../middleware/privateTodos.middleware");
 const router = (0, express_1.Router)();
 //router.get("/getAll", getPrivateTodos);
-router.post("/save", privateTodos_controller_1.createPrivateTodo);
+router.post("/save", auth_middleware_1.authMiddleware, privateTodos_controller_1.createPrivateTodo);
+router.put("/update/:id", auth_middleware_1.authMiddleware, privateTodos_middleware_1.checkTodoOwnership, privateTodos_controller_1.updatePrivateTodo);
+router.delete("/delete/:id", auth_middleware_1.authMiddleware, privateTodos_middleware_1.checkTodoOwnership, privateTodos_controller_1.deleteTodo);
+router.get("/get/:userId", auth_middleware_1.authMiddleware, privateTodos_controller_1.getPrivateTodos);
 exports.default = router;

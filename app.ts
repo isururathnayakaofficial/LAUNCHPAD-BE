@@ -1,6 +1,7 @@
 import path from "path";
 import dotenv from "dotenv";
 
+
 // load env FIRST
 dotenv.config({
   path: path.resolve(process.cwd(), ".env"),
@@ -16,13 +17,19 @@ import cors from "cors";
 
 
 const app: Application = express();
+
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://launchpadpro-three.vercel.app"
+];
+
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: allowedOrigins,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
-app.options(/.*/, cors());
 
 app.use(express.json());
 

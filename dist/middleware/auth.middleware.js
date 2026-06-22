@@ -8,49 +8,34 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const authMiddleware = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
-        //  Check header exists
         if (!authHeader) {
-            res.status(401).json({
-                success: false,
-                message: "Authorization header missing"
-            });
+            res.status(401).json({ message: "No token provided" });
             return;
         }
-        //  Validate Bearer format
-        const parts = authHeader.split(" ");
-        if (parts.length !== 2 || parts[0] !== "Bearer") {
-            res.status(401).json({
-                success: false,
-                message: "Invalid authorization format. Use Bearer token"
-            });
-            return;
-        }
-        const token = parts[1];
+        const token = authHeader.split(" ")[1];
         if (!token) {
-            res.status(401).json({
-                success: false,
-                message: "Token missing"
-            });
+            res.status(401).json({ message: "Invalid token format" });
             return;
         }
-        //Verify token
+        if (!process.env.JWT_SECRET) {
+            res.status(500).json({ message: "JWT_SECRET missing" });
+            return;
+        }
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        if (!decoded || !decoded.userId) {
-            res.status(401).json({
-                success: false,
-                message: "Invalid token payload"
-            });
+        console.log("🔥 DECODED TOKEN:", decoded);
+        if (!decoded.userId) {
+            res.status(401).json({ message: "userId missing in token" });
             return;
         }
-        //Attach user to request
         req.userId = decoded.userId;
         next();
     }
-    catch (error) {
+    catch (err) {
+        console.error("🔥 AUTH ERROR:", err);
         res.status(401).json({
-            success: false,
-            message: "Unauthorized - Token verification failed"
+            message: (err === null || err === void 0 ? void 0 : err.message) || "Invalid token"
         });
+        return;
     }
 };
 exports.authMiddleware = authMiddleware;
