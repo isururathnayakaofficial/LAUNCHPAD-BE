@@ -1,8 +1,8 @@
-import {request, response, NextFunction} from 'express';
+import {Request, Response, NextFunction} from 'express';
 import {getDB} from '../config/db';
 import {ObjectId} from 'mongodb';
 
-interface StartupProfileRequest extends request {
+interface StartupProfileRequest extends Request {
     params: any;
     userId?: string;
     profile?: any;
@@ -12,7 +12,7 @@ const startupProfileCollection = () => getDB().collection("profile")
 
 export const checkProfileOwnership = async (
     req: StartupProfileRequest,
-    res: response,
+    res: Response,
     next: NextFunction
 ) => {
     try {

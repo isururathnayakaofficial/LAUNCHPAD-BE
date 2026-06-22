@@ -9,9 +9,11 @@ dotenv.config({
 import express, { Application } from "express";
 import customerRoutes from "./routes/customer.routes";
 import privateTodosRoutes from "./routes/privateTodos.routers";
+import startupProfileRouter from "./routes/startupProfile.router";
 import tasksRouter from "./routes/task.routers";
 import authRoutes from "./routes/auth.routes";
 import cors from "cors";
+
 
 const app: Application = express();
 app.use(cors({
@@ -28,5 +30,6 @@ app.use("/api/customers", customerRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/private-todos", privateTodosRoutes);
 app.use("/api/tasks", tasksRouter);
+app.use("/api/profile", startupProfileRouter); 
 
 export default app;
