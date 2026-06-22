@@ -143,6 +143,50 @@ console.log("REQ FILES:", req.files);
   }
 };
 
+export const getTaskByTaskID = async (
+  req: taksAssign,
+  res: Response
+) => {
+  try {
+    const taskId = req.params.taskId as string;
+
+    if (!ObjectId.isValid(taskId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid task ID"
+      });
+    }
+
+    const task = await tasks().findOne({
+      _id: new ObjectId(taskId)
+    });
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Task fetched successfully",
+      data: {
+        title: task.title,
+        description: task.description
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
 export const deleteTask = async (req: Request, res: Response) => {
   try {
     const taskId = req.params.id as string;
