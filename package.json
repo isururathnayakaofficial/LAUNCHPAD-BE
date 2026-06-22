@@ -28,7 +28,7 @@
   },
   "scripts": {
     "dev": "nodemon --exec ts-node server.ts",
-    "build": "npx tsc",
+    "build": "node ./node_modules/typescript/bin/tsc",
     "start": "node dist/server.js"
   }
 }
