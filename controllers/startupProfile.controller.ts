@@ -51,3 +51,30 @@ export const CreateProfile = async (
     }
 
 }
+
+export const getProfile = async (
+    req: StartupProfileRequest,
+    res: Response,
+    next:NextFunction
+):Promise<void> => {
+    try{
+        if(!req.userId){
+            res.status(401).json({
+                success:false,
+                message:"Unauthorized"
+            });
+            return;
+        }
+        const profile = await startupProfileCollection().find({userId:new ObjectId(req.userId)}).toArray();
+        res.status (200).json({
+            success:true,
+            message:"Profile fetched successfully",
+            data:profile
+        })
+    }catch(error){
+        res.status(500).json({
+            success:false,
+            message:"Internal Server Error"
+        });
+    }
+}
